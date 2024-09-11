@@ -1,0 +1,33 @@
+import sys
+import logging
+import pandas as pd
+
+from sklearn.base import BaseEstimator, TransformerMixin
+
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler(sys.stdout)
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
+
+class DeviceCountTransformer(BaseEstimator, TransformerMixin):
+    """
+    Transformer to count the number of ads for each unique user in a specified column.
+    """
+
+    def __init__(self, column_name: str):
+        self.device_count_feature = []
+        self.column_name = column_name
+        self.data_group = None
+
+    def fit(self, X: pd.DataFrame, y=None):
+        # count the number of ads for each unique user in the specified column
+        data_group = X[[self.column_name, 'id']].groupby([self.column_name]).count()
+
+        # make columns with device count for each user
+        for index in X[self.column_name]:
+            self.device_count_feature.append(data_group.loc[index, 'id'])
+
+        return self
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        return pd.DataFrame(self.device_count_feature, columns=[f'{self.column_name}_count'])
