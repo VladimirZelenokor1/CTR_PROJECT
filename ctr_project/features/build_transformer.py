@@ -48,7 +48,7 @@ def build_transformer() -> Pipeline:
     user_count_transformer = UserCountTransformer()
 
     pipeline = Pipeline(
-        [
+        steps=[
             ("device_time_transformer", device_time_transformer),
             ("user_count_transformer", user_count_transformer),
         ]

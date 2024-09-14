@@ -33,7 +33,7 @@ class UserCountTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         # Assuming 'device_ip', 'device_id', and 'hour_of_day' are the columns in X
         result_array = np.array(self.user_count_feature).reshape(-1, 1)
-        count_df = pd.DataFrame(result_array, columns=[
+        count_df = pd.DataFrame(X, columns=[
             'device_ip_count',
             'device_id_count',
             'hour_of_day',
