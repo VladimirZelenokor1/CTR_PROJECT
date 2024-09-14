@@ -53,7 +53,6 @@ def build_transformer() -> Pipeline:
             ("user_count_transformer", user_count_transformer),
         ]
     )
-    logger.info(f"Transformer pipeline built successfully. {pipeline}")
 
     return pipeline
 
@@ -61,7 +60,6 @@ def build_ctr_transformer(params: FeatureParams) -> CtrTransformer:
 
     feature_names = params.ctr_features
     ctr_transformer = CtrTransformer(features=feature_names)
-    logger.info(f"CTR transformer built successfully. {ctr_transformer}")
 
     return ctr_transformer
 
