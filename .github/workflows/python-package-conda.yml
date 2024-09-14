@@ -1,12 +1,14 @@
 name: Python Package using Conda
 
-on: [push]
+on:
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-linux:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 5
+      fail-fast: true
 
     steps:
     - uses: actions/checkout@v4
@@ -20,7 +22,8 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda env update --file environment.yml --name base
+        conda create -n python=3.11.9 newenv pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
         conda install flake8
