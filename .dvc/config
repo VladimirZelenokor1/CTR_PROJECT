@@ -1,3 +1,0 @@
-['remote "s3"']
-    url = s3://ctrbuckettest/tests
-    endpointurl = https://storage.yandexcloud.net

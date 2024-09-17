@@ -1,0 +1,9 @@
+stages:
+  train:
+    cmd: python main_pipeline.py --config configs/train.yaml
+    deps:
+      - configs/train.yaml
+      - data/raw/
+    outs:
+      - models/metrics.json
+      - models/catclf.pkl
