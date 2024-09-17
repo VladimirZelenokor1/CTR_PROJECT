@@ -26,6 +26,9 @@ jobs:
         conda config --set channel_priority strict
         conda create -n newenv python=3.11.9 pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Load environment variables
+      run: |
+        python -c "from dotenv import load_dotenv; load_dotenv()"
     - name: Lint with flake8
       run: |
         conda install flake8
