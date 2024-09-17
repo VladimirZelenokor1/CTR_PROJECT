@@ -11,6 +11,7 @@ from ctr_project.data.make_dataset import read_data, split_data
 from ctr_project.features.build_transformer import build_transformer, build_ctr_transformer, process_count_features, \
     extract_target, process_count_features
 from ctr_project.modeling.model_fit_predict import train_model, predict_model, evaluate_model, serialize_model
+from ctr_project.modeling.repro_experiments import log_experiment_mlflow
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
@@ -49,13 +50,23 @@ def train_pipeline(config_path: str):
     val_target = extract_target(val_df, training_pipeline_params.feature_params)
 
     # Train a model using the training data and evaluate its performance on validation data
-    model = train_model(
-        train_features, train_target, training_pipeline_params.train_params
-    )
+    if training_pipeline_params.use_mlflow:
+        model, metrics = log_experiment_mlflow(
+            run_name="first_run",
+            train_features=train_features,
+            train_target=train_target,
+            val_features=val_features,
+            val_target=val_target,
+            training_pipeline_params=training_pipeline_params,
+        )
+    else:
+        model = train_model(
+            train_features, train_target, training_pipeline_params.train_params
+        )
 
-    # Predict on validation data and evaluate model metrics
-    predictions, preds = predict_model(model, val_features)
-    metrics = evaluate_model(predictions, preds, val_target)
+        predicted_proba, preds = predict_model(model, val_features)
+        metrics = evaluate_model(predicted_proba, preds, val_target)
+        logger.debug(f"preds/ targets shapes:  {(preds.shape, val_target.shape)}")
 
     # Save metrics to file
     with open(training_pipeline_params.metric_path, "w") as metrics_file:
