@@ -1,7 +1,7 @@
 # Data
 #/data/
 
-/.dvc/config
+.dvc/config
 # Mac OS-specific storage files
 .DS_Store
 
