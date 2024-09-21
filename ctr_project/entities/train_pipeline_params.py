@@ -25,9 +25,9 @@ class TrainingPipelineParams:
     splitting_params: SplittingParams
     feature_params: FeatureParams
     train_params: TrainingParams
-    input_data_path: str = field(default="../data/raw/sampled_train_50k.csv")
+    input_data_path: str = field(default="D:/Projects/CTR_PROJECT/data/raw/sampled_train_50k.csv")
     input_preprocessed_data_path: str = field(
-        default="../data/raw/sampled_preprocessed_train_50k.csv"
+        default="D:/Projects/CTR_PROJECT/data/raw/sampled_preprocessed_train_50k.csv"
     )
     use_mlflow: bool = field(default=True)
 
