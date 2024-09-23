@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
 from catboost import CatBoostClassifier
+from pathlib import Path
 
 from ctr_project.entities.train_pipeline_params import (
     TrainingPipelineParams,
@@ -94,12 +95,10 @@ def make_predict(
 def predict(request: AdOpportunity):
     logger.debug("app/predict run")
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(base_dir, '../configs/train.yaml')
-    config_path = os.path.join(os.getcwd(), 'configs/train.yaml')
+    PATH = os.path.join(os.getcwd(), 'configs/train.yaml')
 
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
-        config_path
+        PATH
     )
 
     logger.debug(f"app/predict training_pipeline_params: {training_pipeline_params}")

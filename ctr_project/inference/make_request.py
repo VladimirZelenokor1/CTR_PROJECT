@@ -4,6 +4,7 @@ from time import sleep
 import numpy as np
 import requests
 import os
+from pathlib import Path
 
 from ctr_project.data.make_dataset import read_data
 from ctr_project.entities.train_pipeline_params import  (
@@ -18,12 +19,11 @@ logger.addHandler(handler)
 
 if __name__ == '__main__':
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(base_dir, '../configs/train.yaml')
-    config_path = os.path.join(os.getcwd(), 'configs/train.yaml')
+    BASE_DIR = Path(__file__).resolve().parent.parent.parent
+    PATH = str((BASE_DIR / 'configs/train.yaml').resolve()).replace('\\', '/')
 
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
-        config_path
+        PATH
     )
 
     data = read_data(training_pipeline_params.input_preprocessed_data_path)
