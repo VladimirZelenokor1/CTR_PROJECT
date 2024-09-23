@@ -94,7 +94,10 @@ def make_predict(
 def predict(request: AdOpportunity):
     logger.debug("app/predict run")
 
-    config_path = "../configs/train.yaml"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, '../configs/train.yaml')
+    config_path = os.path.join(os.getcwd(), 'configs/train.yaml')
+
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         config_path
     )
