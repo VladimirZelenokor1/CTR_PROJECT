@@ -34,6 +34,7 @@ if __name__ == '__main__':
         )
 
         logger.info(response.status_code)
+        logger.info(f"check response.json(): {response.json()}\n")
 
         sleep(1)
 
