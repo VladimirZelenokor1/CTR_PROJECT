@@ -1,6 +1,8 @@
 import yaml
 import logging
 import sys
+import os
+from pathlib import Path
 
 from dataclasses import dataclass, field
 from marshmallow_dataclass import class_schema
@@ -14,7 +16,8 @@ handler = logging.StreamHandler(sys.stdout)
 logger.setLevel(logging.INFO)
 logger.addHandler(handler)
 
-PATH = "../configs/train.yaml"
+BASE_DIR = Path(__file__).resolve().parent.parent
+PATH = os.path.join(os.getcwd(), 'configs/train.yaml')
 
 @dataclass()
 class TrainingPipelineParams:
@@ -25,9 +28,9 @@ class TrainingPipelineParams:
     splitting_params: SplittingParams
     feature_params: FeatureParams
     train_params: TrainingParams
-    input_data_path: str = field(default="../data/raw/sampled_train_50k.csv")
+    input_data_path: str = field(default=os.path.join(BASE_DIR, "../data/raw/sampled_train_50k.csv"))
     input_preprocessed_data_path: str = field(
-        default="../data/raw/sampled_preprocessed_train_50k.csv"
+        default=os.path.join(BASE_DIR, "../data/raw/sampled_preprocessed_train_50k.csv")
     )
     use_mlflow: bool = field(default=True)
 
@@ -38,6 +41,13 @@ TrainingPipelineParamsSchema = class_schema(TrainingPipelineParams)
 def read_training_pipeline_params(path: str) -> TrainingPipelineParams:
     with open(path, "r") as input_stream:
         config_dict = yaml.safe_load(input_stream)
+
+        config_dict['output_model_path'] = str((BASE_DIR / config_dict['output_model_path']).resolve()).replace('\\', '/')
+        logger.info({config_dict['output_model_path']})
+        config_dict['output_transformer_path'] = str((BASE_DIR / config_dict['output_transformer_path']).resolve()).replace('\\', '/')
+        config_dict['output_ctr_transformer_path'] = str((BASE_DIR / config_dict['output_ctr_transformer_path']).resolve()).replace('\\', '/')
+        config_dict['metric_path'] = str((BASE_DIR / config_dict['metric_path']).resolve()).replace('\\', '/')
+
         schema = TrainingPipelineParamsSchema().load(config_dict)
         return schema
 
