@@ -3,6 +3,7 @@ import sys
 from time import sleep
 import numpy as np
 import requests
+import os
 
 from ctr_project.data.make_dataset import read_data
 from ctr_project.entities.train_pipeline_params import  (
@@ -16,7 +17,11 @@ logger.setLevel(logging.INFO)
 logger.addHandler(handler)
 
 if __name__ == '__main__':
-    config_path = "D:/Projects/CTR_PROJECT/configs/train.yaml"
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, '../configs/train.yaml')
+    config_path = os.path.join(os.getcwd(), 'configs/train.yaml')
+
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         config_path
     )
