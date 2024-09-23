@@ -94,7 +94,7 @@ def make_predict(
 def predict(request: AdOpportunity):
     logger.debug("app/predict run")
 
-    config_path = "D:/Projects/CTR_PROJECT/configs/train.yaml"
+    config_path = "../configs/train.yaml"
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         config_path
     )
