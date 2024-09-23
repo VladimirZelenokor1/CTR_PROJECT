@@ -14,13 +14,12 @@ from ctr_project.entities.train_pipeline_params import (
     read_training_pipeline_params,
 )
 
-from ctr_project.features import CtrTransformer
+from ctr_project.features.CtrTransformer import CtrTransformer
 from ctr_project.modeling.model_fit_predict import predict_model
-from tests.features.test_ctr_transformer import ctr_transformer
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 class AdOpportunity(BaseModel):
@@ -51,8 +50,16 @@ def check_models(training_pipeline_params: TrainingPipelineParams):
 
 @app.get('/check_schema')
 def check_schema(features: list, training_pipeline_params: TrainingPipelineParams):
-    if not set(training_pipeline_params.feature_params.ctr_features).issubset(
-            set(features)
+    features = [feature for sublist in features for feature in sublist]
+
+    if all(isinstance(item, (tuple, str, int, float)) for item in features):
+        features_set = set(features)
+    else:
+        raise TypeError("Features contains unhashable types")
+
+    ctr_features_as_set = {str(feature) for feature in training_pipeline_params.feature_params.ctr_features}
+    if not ctr_features_as_set.issubset(
+            features_set
     ):
         logger.error("app/check_schema missing columns")
         raise HTTPException(
@@ -73,12 +80,12 @@ def make_predict(
     features = ctr_transformer.transform(df)
     predicted_proba, _ = predict_model(model, features)
 
-    logger.debug("df.device_ip: ", df["device_ip"].values[0])
-    logger.debug("predicted_proba", predicted_proba, predicted_proba[0, 1])
+    logger.debug(f"device_ip: {str(df['device_ip'].values[0])}")
+    logger.debug(f"predicted_proba: {predicted_proba}, predicted_proba[0, 1]: {predicted_proba[0, 1]}")
 
     return [
         ClickResponse(
-            device_ip=df["device_ip"].values[0],
+            device_ip=str(df["device_ip"].values[0]),
             click_proba=round(predicted_proba[0, 1], 4),
         )
     ]
