@@ -10,8 +10,8 @@ from dataclasses import asdict
 
 from catboost import CatBoostClassifier
 
-from ctr_project.entities.train_pipeline_params import TrainingPipelineParams
-from ctr_project.modeling.model_fit_predict import train_model, evaluate_model, predict_model
+from src.entities.train_pipeline_params import TrainingPipelineParams
+from src.models.model_fit_predict import train_model, evaluate_model, predict_model
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)

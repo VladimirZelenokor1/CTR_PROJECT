@@ -6,8 +6,8 @@ import requests
 import os
 from pathlib import Path
 
-from ctr_project.data.make_dataset import read_data
-from ctr_project.entities.train_pipeline_params import  (
+from src.data.make_dataset import read_data
+from src.entities.train_pipeline_params import  (
     read_training_pipeline_params,
     TrainingPipelineParams,
 )
@@ -20,7 +20,7 @@ logger.addHandler(handler)
 if __name__ == '__main__':
 
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
-    PATH = str((BASE_DIR / 'configs/train.yaml').resolve()).replace('\\', '/')
+    PATH = str((BASE_DIR / 'configs/train_config.yaml').resolve()).replace('\\', '/')
 
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         PATH
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
         response = requests.post(
             "http://0.0.0.0:8000/predict/",
-            json={"data": [request_data], "features": [list(data.columns)]}
+            json={"data": request_data, "features": list(data.columns)}
         )
 
         logger.info(response.status_code)

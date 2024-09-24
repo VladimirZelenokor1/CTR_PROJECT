@@ -11,7 +11,7 @@ from sklearn.metrics import (
 from typing import Dict, List, Union, Tuple
 import joblib
 
-from ctr_project.entities.train_params import TrainingParams
+from src.entities.train_params import TrainingParams
 
 Classifier = Union[CatBoostClassifier]
 
