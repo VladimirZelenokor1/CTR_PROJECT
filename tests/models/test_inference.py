@@ -3,7 +3,7 @@ import logging
 import sys
 from fastapi.testclient import TestClient
 
-from ctr_project.data.make_dataset import read_data
+from src.data.make_dataset import read_data
 from app import app
 
 
@@ -31,7 +31,7 @@ def test_inference_model(processed_dataset_path: str):
     logger.info(f"request_data: {request_data}")
 
     response = client.post(
-        "http://0.0.0.0:8000/predict/", json={"data": [request_data], "features": [list(data.columns.tolist())]}
+        "http://0.0.0.0:8000/predict/", json={"data": request_data, "features": list(data.columns.tolist())}
     )
 
     assert response.status_code == 200

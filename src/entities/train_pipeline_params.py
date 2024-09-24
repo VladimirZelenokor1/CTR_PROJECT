@@ -7,9 +7,9 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from marshmallow_dataclass import class_schema
 
-from ctr_project.entities.train_params import TrainingParams
-from ctr_project.entities.split_params import SplittingParams
-from ctr_project.entities.feature_params import FeatureParams
+from src.entities.train_params import TrainingParams
+from src.entities.split_params import SplittingParams
+from src.entities.feature_params import FeatureParams
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
@@ -17,7 +17,7 @@ logger.setLevel(logging.INFO)
 logger.addHandler(handler)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-PATH = os.path.join(os.getcwd(), 'configs/train.yaml')
+PATH = os.path.join(os.getcwd(), 'configs/train_config.yaml')
 
 @dataclass()
 class TrainingPipelineParams:
@@ -30,7 +30,7 @@ class TrainingPipelineParams:
     train_params: TrainingParams
     input_data_path: str
     input_preprocessed_data_path: str
-    use_mlflow: bool = field(default=True)
+    use_mlflow: bool = field(default=False)
 
 
 TrainingPipelineParamsSchema = class_schema(TrainingPipelineParams)

@@ -7,10 +7,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import FunctionTransformer
 
-from ctr_project.entities.feature_params import FeatureParams
-from ctr_project.features.DeviceCountTransformer import DeviceCountTransformer
-from ctr_project.features.CtrTransformer import CtrTransformer
-from ctr_project.features.UserCountTransformer import UserCountTransformer
+from src.entities.feature_params import FeatureParams
+from src.features.DeviceCountTransformer import DeviceCountTransformer
+from src.features.CtrTransformer import CtrTransformer
+from src.features.UserCountTransformer import UserCountTransformer
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)

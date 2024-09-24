@@ -7,8 +7,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
 
-from ctr_project.features.DeviceCountTransformer import DeviceCountTransformer
-from ctr_project.features.UserCountTransformer import UserCountTransformer
+from src.features.DeviceCountTransformer import DeviceCountTransformer
+from src.features.UserCountTransformer import UserCountTransformer
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)

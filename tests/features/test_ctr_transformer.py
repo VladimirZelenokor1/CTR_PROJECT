@@ -4,7 +4,7 @@ import sys
 import pandas as pd
 from typing import Tuple
 
-from ctr_project.features.CtrTransformer import CtrTransformer
+from src.features.CtrTransformer import CtrTransformer
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)

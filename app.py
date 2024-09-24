@@ -10,13 +10,13 @@ import joblib
 from catboost import CatBoostClassifier
 from pathlib import Path
 
-from ctr_project.entities.train_pipeline_params import (
+from src.entities.train_pipeline_params import (
     TrainingPipelineParams,
     read_training_pipeline_params,
 )
 
-from ctr_project.features.CtrTransformer import CtrTransformer
-from ctr_project.modeling.model_fit_predict import predict_model
+from src.features.CtrTransformer import CtrTransformer
+from src.models.model_fit_predict import predict_model
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
@@ -51,7 +51,7 @@ def check_models(training_pipeline_params: TrainingPipelineParams):
 
 @app.get('/check_schema')
 def check_schema(features: list, training_pipeline_params: TrainingPipelineParams):
-    features = [feature for sublist in features for feature in sublist]
+    # features = [feature for sublist in features for feature in sublist]
 
     if all(isinstance(item, (tuple, str, int, float)) for item in features):
         features_set = set(features)
@@ -75,10 +75,11 @@ def make_predict(
     training_pipeline_params: TrainingPipelineParams,
 ) -> List[ClickResponse]:
     check_schema(features, training_pipeline_params)
-
-    df = pd.DataFrame(data, columns=features)
+    # data = [feature for sublist in data for feature in sublist]
+    df = pd.DataFrame([data], columns=features)
 
     features = ctr_transformer.transform(df)
+
     predicted_proba, _ = predict_model(model, features)
 
     logger.debug(f"device_ip: {str(df['device_ip'].values[0])}")
@@ -95,12 +96,10 @@ def make_predict(
 def predict(request: AdOpportunity):
     logger.debug("app/predict run")
 
-    PATH = os.path.join(os.getcwd(), 'configs/train.yaml')
-
+    PATH = os.path.join(os.getcwd(), 'configs/train_config.yaml').replace("\\", '/')
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         PATH
     )
-
     logger.debug(f"app/predict training_pipeline_params: {training_pipeline_params}")
 
     check_models(training_pipeline_params)

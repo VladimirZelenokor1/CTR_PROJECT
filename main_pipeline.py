@@ -5,13 +5,13 @@ import argparse
 import pandas as pd
 import datetime
 
-from ctr_project.entities.train_pipeline_params import TrainingPipelineParams, read_training_pipeline_params
-from ctr_project.data.make_dataset import read_data, split_data
+from src.entities.train_pipeline_params import TrainingPipelineParams, read_training_pipeline_params
+from src.data.make_dataset import read_data, split_data
 
-from ctr_project.features.build_transformer import build_transformer, build_ctr_transformer, process_count_features, \
-    extract_target, process_count_features
-from ctr_project.modeling.model_fit_predict import train_model, predict_model, evaluate_model, serialize_model
-from ctr_project.modeling.repro_experiments import log_experiment_mlflow
+from src.features.build_transformer import (build_transformer, build_ctr_transformer, process_count_features,
+                                            extract_target, process_count_features)
+from src.models.model_fit_predict import train_model, predict_model, evaluate_model, serialize_model
+from src.models.repro_experiments import log_experiment_mlflow
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
@@ -69,8 +69,8 @@ def train_pipeline(config_path: str):
         logger.debug(f"preds/ targets shapes:  {(preds.shape, val_target.shape)}")
 
     # Save metrics to file
-    with open(training_pipeline_params.metric_path, "w") as metrics_file:
-        json.dump(metrics, metrics_file)
+    #with open(training_pipeline_params.metric_path, "w") as metrics_file:
+        #json.dump(metrics, metrics_file)
 
     # Save trained model and CTR transformer to files
     serialize_model(model, training_pipeline_params.output_model_path)
@@ -80,6 +80,6 @@ def train_pipeline(config_path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="configs/train.yaml")
+    parser.add_argument("--config", default="configs/train_config.yaml")
     args = parser.parse_args()
     train_pipeline(args.config)

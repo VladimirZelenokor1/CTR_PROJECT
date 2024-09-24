@@ -29,17 +29,17 @@ class CtrTransformer(BaseEstimator, TransformerMixin):
         mean_ctr = df_vocab['ctr'].mean()
 
         # Store the ctr and vocab in a dictionary for quick lookup
-        keys = df_vocab.index.tolist()
-        values = df_vocab['ctr'].values.tolist()
+        keys = list(df_vocab.index)
+        values = list(df_vocab['ctr'].values)
         vocab = {keys[i]: values[i] for i in range(len(keys))}
 
         return vocab, mean_ctr
 
-    def _response_transform(self, X: pd.DataFrame, feature_name: str) -> pd.DataFrame:
+    def _response_transform(self, X: pd.DataFrame, name: str):
         # Apply the CTR transformation for each feature in the given data
         vector = []
         for row in X:
-            vector.append(self.vocab[feature_name].get(row, self.mean_ctr[feature_name]))
+            vector.append(self.vocab[name].get(row, self.mean_ctr[name]))
 
         return vector
 
@@ -52,7 +52,7 @@ class CtrTransformer(BaseEstimator, TransformerMixin):
 
         return self
 
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+    def transform(self, X: pd.DataFrame):
         # Apply the CTR transformation to the given data and return a new DataFrame
         self.ctr_df = pd.DataFrame()
 

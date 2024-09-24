@@ -6,16 +6,16 @@ import pytest
 from catboost import CatBoostClassifier
 from datetime import datetime
 
-from ctr_project.data.make_dataset import read_data
-from ctr_project.entities.feature_params import FeatureParams
-from ctr_project.entities.train_params import TrainingParams
-from ctr_project.features.build_transformer import (
+from src.data.make_dataset import read_data
+from src.entities.feature_params import FeatureParams
+from src.entities.train_params import TrainingParams
+from src.features.build_transformer import (
     build_transformer,
     process_count_features,
     build_ctr_transformer,
     extract_target,
 )
-from ctr_project.modeling.model_fit_predict import train_model, serialize_model
+from src.models.model_fit_predict import train_model, serialize_model
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)

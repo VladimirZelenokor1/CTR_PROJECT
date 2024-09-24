@@ -2,8 +2,8 @@ import numpy as np
 import logging
 import sys
 
-from ctr_project.data.make_dataset import read_data, split_data
-from ctr_project.entities.split_params import SplittingParams
+from src.data.make_dataset import read_data, split_data
+from src.entities.split_params import SplittingParams
 
 
 logger = logging.getLogger(__name__)
