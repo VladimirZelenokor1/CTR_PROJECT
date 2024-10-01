@@ -9,6 +9,8 @@ from pydantic import BaseModel
 import joblib
 from catboost import CatBoostClassifier
 from pathlib import Path
+from prometheus_client import Gauge, Counter, Histogram
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.entities.train_pipeline_params import (
     TrainingPipelineParams,
@@ -32,6 +34,16 @@ class ClickResponse(BaseModel):
     click_proba: float
 
 app = FastAPI()
+Instrumentator().instrument(app).expose(app)
+proba_gauge = Gauge("predicted_proba", "Predicted price")
+predict_request_counter = Counter(
+    "http_predict_request_total", "Total HTTP Predict Requests"
+)
+proba_hist = Histogram(
+    "predicted_proba_hist",
+    "Histogram of predicted click probas",
+    buckets=[0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95],
+)
 
 @app.get('/')
 def main():
@@ -81,6 +93,11 @@ def make_predict(
     features = ctr_transformer.transform(df)
 
     predicted_proba, _ = predict_model(model, features)
+
+    # set metrics for prometheus
+    proba_gauge.set(round(predicted_proba[0, 1], 4))
+    predict_request_counter.inc()
+    proba_hist.observe(round(predicted_proba[0, 1], 4))
 
     logger.debug(f"device_ip: {str(df['device_ip'].values[0])}")
     logger.debug(f"predicted_proba: {predicted_proba}, predicted_proba[0, 1]: {predicted_proba[0, 1]}")

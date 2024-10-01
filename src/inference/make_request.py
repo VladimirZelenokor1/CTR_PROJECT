@@ -34,13 +34,14 @@ if __name__ == '__main__':
         ]
 
         response = requests.post(
-            "http://51.250.26.94:8000/predict/",
+            #"http://51.250.26.94:8000/predict/",
+            "http://0.0.0.0:8000/predict/",
             json={"data": request_data, "features": list(data.columns)}
         )
 
         logger.info(response.status_code)
         logger.info(f"check response.json(): {response.json()}\n")
 
-        sleep(1)
+        sleep(4)
 
 
